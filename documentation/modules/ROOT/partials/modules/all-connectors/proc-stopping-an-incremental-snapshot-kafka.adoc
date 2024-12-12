@@ -1,0 +1,28 @@
+You can send a signal message to the {link-prefix}:{link-signalling}#debezium-signaling-enabling-kafka-signaling-channel[configured Kafka signaling topic] to stop an ad hoc incremental snapshot.
+
+The key of the Kafka message must match the value of the `topic.prefix` connector configuration option.
+
+The value of the message is a JSON object with `type` and `data` fields.
+
+The signal type is `stop-snapshot`, and the `data` field must have the following fields:
+
+.Execute snapshot data fields
+[cols="2,2,6",options="header"]
+|===
+|Field | Default | Value
+
+|`type`
+|`incremental`
+| The type of the snapshot to be executed.
+Currently {prodname} supports only the `incremental` type.  +
+See the next section for more details.
+
+|`data-collections`
+|_N/A_
+| An optional array of comma-separated regular expressions that match the fully-qualified names of the tables an array of {data-collection} names or regular expressions to match {data-collection} names to remove from the snapshot. +
+Specify {data-collection} names by using the format `{collection-container}.{data-collection}`.
+
+|===
+
+The following example shows a typical `stop-snapshot` Kafka message:
+include::{snippetsdir}/{context}-frag-signaling-fq-table-formats.adoc[leveloffset=+1,tags=stopping-incremental-snapshot-kafka-example]

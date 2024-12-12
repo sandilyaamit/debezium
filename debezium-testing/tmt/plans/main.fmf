@@ -1,0 +1,112 @@
+# TMT test plan definition
+# https://tmt.readthedocs.io/en/latest/overview.html
+
+# Baseline common for all test plans
+#######################################################################
+summary: Debezium functional testsuite
+discover:
+  how: fmf
+
+# Required HW
+provision:
+  hardware:
+    memory: ">= 24 GiB"
+    cpu:
+      processors: ">= 8"
+
+
+# Install required packages and scripts for running debezium suite
+prepare:
+  - name: Install packages
+    how: install
+    package:
+      - wget
+      - xz
+      - make
+      - git
+      - zip
+      - coreutils
+
+  - name: Install docker-ce
+    how: shell
+    script: |
+      OS=$(cat /etc/redhat-release || true)
+      if [[ ${OS} == *"CentOS"* ]]; then
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      else
+        sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+      fi
+      sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+      sudo systemctl enable docker --now
+
+  - name: Install sdkman and Java
+    how: shell
+    script: |
+      curl -s "https://get.sdkman.io" | bash
+      source ${HOME}/.sdkman/bin/sdkman-init.sh && yes | sdk install java 21.0.3-tem || true
+
+
+  - name: Set Java 21 as default
+    how: shell
+    script: |
+      source ${HOME}/.sdkman/bin/sdkman-init.sh && yes | sdk default java 21.0.3-tem || true
+
+  - name: Install Maven
+    how: shell
+    script: |
+      source ${HOME}/.sdkman/bin/sdkman-init.sh && yes | sdk install maven 3.9.8 || true
+
+  - name: Disable Chronyd service
+    how: shell
+    script: |
+      sudo systemctl disable --now chronyd
+
+# Discover tmt defined tests in tests/ folder
+execute:
+  how: tmt
+
+#######################################################################
+
+/mysql:
+  summary: Run mysql connector functional tests
+  provision:
+    hardware:
+      memory: ">= 16 GiB"
+      cpu:
+        processors: ">= 4"
+  discover+:
+    test:
+      - mysql
+
+/postgres:
+  summary: Run postgresql connector functional tests
+  provision:
+    hardware:
+      memory: ">= 16 GiB"
+      cpu:
+        processors: ">= 4"
+  discover+:
+    test:
+      - postgres
+
+/sqlserver:
+  summary: Run sqlserver connector functional tests
+  provision:
+    hardware:
+      memory: ">= 16 GiB"
+      cpu:
+        processors: ">= 4"
+  discover+:
+    test:
+      - sqlserver
+
+/mongodb:
+  summary: Run mongodb connector functional tests
+  provision:
+    hardware:
+      memory: ">= 16 GiB"
+      cpu:
+        processors: ">= 4"
+  discover+:
+    test:
+      - mongodb

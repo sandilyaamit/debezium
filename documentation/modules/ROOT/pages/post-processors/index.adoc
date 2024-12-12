@@ -1,0 +1,29 @@
+= Post Processors
+
+
+Post processors perform lightweight, per-message mutations, similar to the modifications that are performed by single message transformations (SMTs).
+However, {prodname} calls post processors earlier in the event chain than transformations, enabling post processors to act on messages before they are handed off to the messaging runtime.
+Because post processors can act on messages from within the {prodname} context, they are more efficient at modifying event payloads than transformations.
+
+For a transformation to modify a message, it must recreate the message's immutable `ConnectRecord`, or more aptly, its `SourceRecord`.
+By contrast, because a post processor acts within the {prodname} scope, it can operate on mutable `Struct` types in the event payload of a message, modifying payloads before the construction of the `SourceRecord`.
+Close integration with {prodname} provides post processors with access to {prodname} internals, such as {prodname} metadata about database connections, relational schema model, and so forth.
+In turn, this access enhances efficiency when performing tasks that rely on such internal information.
+
+{prodname} provides the following post processor implementations:
+
+[cols="30%a,70%a",options="header"]
+|===
+|Post Processor
+|Description
+
+|xref:post-processors/reselect-columns.adoc[Reselect columns]
+|Re-selects specific columns that may not have been provided by the change event, such as TOASTed columns or Oracle LOB columns that were not modified by the current event's change.
+
+|===
+
+[IMPORTANT]
+====
+Post processors are designed to modify change event records emitted by {prodname} source connectors only. +
+You cannot configure the {prodname} JDBC sink connector to use a post processor.
+====

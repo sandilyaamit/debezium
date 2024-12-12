@@ -1,0 +1,628 @@
+// Category: debezium-using
+// Type: assembly
+[id="debezium-connector-for-mysql"]
+= {prodname} connector for MySQL
+
+:context: mysql
+:data-collection: table
+:database-port: 3306
+:mbean-name: {context}
+:connector-file: {context}
+:connector-class: MySql
+:connector-name: MySQL
+:include-list-example: inventory.*
+:MYSQL:
+:collection-container: database
+
+ifdef::community[]
+:toc:
+:toc-placement: macro
+:linkattrs:
+:icons: font
+:source-highlighter: highlight.js
+toc::[]
+endif::community[]
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=mariadb-mysql-intro]
+
+// Type: assembly
+// ModuleID: how-debezium-mysql-connectors-work
+// Title: How {prodname} MySQL connectors work
+[[how-the-mysql-connector-works]]
+== How the connector works
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=how-connector-works-intro]
+
+// Type: concept
+// ModuleID: mysql-topologies-supported-by-debezium-connectors
+// Title: MySQL topologies supported by {prodname} connectors
+[id="supported-mysql-topologies"]
+=== Supported MySQL topologies
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=supported-topos]
+
+// Type: concept
+// Title: How {prodname} MySQL connectors handle database schema changes
+[[mysql-schema-history-topic]]
+=== Schema history topic
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=schema-history]
+
+// Type: concept
+// Title: How {prodname} MySQL connectors expose database schema changes
+[id="mysql-schema-change-topic"]
+=== Schema change topic
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=schema-change]
+
+
+// Type: concept
+// Title: How {prodname} MySQL connectors perform database snapshots
+[[mysql-snapshots]]
+=== Snapshots
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=snapshots]
+
+// Type: concept
+[id="mysql-initial-snapshot-workflow-with-global-read-lock"]
+==== Initial snapshots that use a global read lock
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=initial-snap-global]
+
+// Type: concept
+[id="mysql-initial-snapshot-workflow-with-table-level-locks"]
+==== Initial snapshots that use table-level locks
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=initial-snap-table-lock]
+
+
+// ModuleID: mysql-description-of-why-initial-snapshots-capture-the-schema-history-for-all-tables
+// Title: Description of why initial snapshots capture the schema history for all tables
+// Type: concept
+[id="understanding-why-initial-snapshots-capture-the-schema-history-for-all-tables"]
+==== Understanding why initial snapshots capture the schema history for all tables
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=why-snapshot-captures-history-all]
+
+
+// Type: procedure
+[id="mysql-capturing-data-from-tables-not-captured-by-the-initial-snapshot-no-schema-change"]
+==== Capturing data from tables not captured by the initial snapshot (no schema change)
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=cap-tbls-not-in-initial-no-schema-chg]
+
+
+// Type: procedure
+[id="mysql-capturing-data-from-new-tables-with-schema-changes"]
+==== Capturing data from tables not captured by the initial snapshot (schema change)
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=cap-tbls-not-in-initial-schema-chg]
+
+// Type: concept
+[id="debezium-mysql-ad-hoc-snapshots"]
+=== Ad hoc snapshots
+
+include::{partialsdir}/modules/all-connectors/con-connector-ad-hoc-snapshots.adoc[leveloffset=+1]
+
+// Type: assembly
+// ModuleID: debezium-mysql-incremental-snapshots
+[id="debezium-mysql-incremental-snapshots"]
+=== Incremental snapshots
+
+include::{partialsdir}/modules/all-connectors/con-connector-incremental-snapshot.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="mysql-triggering-an-incremental-snapshot"]
+==== Triggering an incremental snapshot
+
+include::{partialsdir}/modules/all-connectors/proc-triggering-an-incremental-snapshot-sql.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="mysql-incremental-snapshots-additional-conditions"]
+==== Running an ad hoc incremental snapshots with `additional-conditions`
+
+include::{partialsdir}/modules/all-connectors/proc-running-an-ad-hoc-snapshot-with-additional-conditions.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="mysql-triggering-an-incremental-snapshot-kafka"]
+==== Using the Kafka signaling channel to trigger an incremental snapshot
+
+include::{partialsdir}/modules/all-connectors/proc-triggering-an-incremental-snapshot-kafka.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="mysql-stopping-an-incremental-snapshot"]
+==== Stopping an incremental snapshot
+
+include::{partialsdir}/modules/all-connectors/proc-stopping-an-incremental-snapshot-sql.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="mysql-stopping-an-incremental-snapshot-kafka"]
+==== Using the Kafka signaling channel to stop an incremental snapshot
+
+include::{partialsdir}/modules/all-connectors/proc-stopping-an-incremental-snapshot-kafka.adoc[leveloffset=+1]
+
+ifdef::community[]
+[id="mysql-read-only-incremental-snapshots"]
+==== Read-only incremental snapshots
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=readonly-incremental]
+
+==== Ad hoc read-only incremental snapshots
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=adhoc-ro-incremental]
+
+// Type: continue
+[id="mysql-snapshot-events"]
+=== Operation type of snapshot events
+
+The MySQL connector emits snapshot events as `READ` operations `("op" : "r")`.
+If you prefer that the connector emits snapshot events as `CREATE` (`c`) events, configure the {prodname} `ReadToInsertEvent` single message transform (SMT) to modify the event type.
+
+The following example shows how to configure the SMT:
+
+.Example: Using the `ReadToInsertEvent` SMT to change the type of snapshot events
+----
+transforms=snapshotasinsert,...
+transforms.snapshotasinsert.type=io.debezium.connector.mysql.transforms.ReadToInsertEvent
+----
+endif::community[]
+
+ifdef::community[]
+[[connector-custom-snapshot]]
+=== Custom snapshotter SPI
+include::{partialsdir}/modules/all-connectors/custom-snapshotter-spi.adoc[leveloffset=+3]
+endif::community[]
+
+// Type: concept
+[id="mysql-blocking-snapshots"]
+=== Blocking snapshots
+
+include::{partialsdir}/modules/all-connectors/con-connector-blocking-snapshot.adoc[leveloffset=+3]
+
+// Type: concept
+// Title: Default names of Kafka topics that receive {prodname} MySQL change event records
+[[mysql-topic-names]]
+=== Topic names
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=topic-names]
+
+[[mysql-transaction-metadata]]
+=== Transaction metadata
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=trans-meta]
+
+// Type: assembly
+// ModuleID: descriptions-of-debezium-mysql-connector-data-change-events
+// Title: Descriptions of {prodname} MySQL connector data change events
+[[mysql-events]]
+== Data change events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=data-chg-events]
+
+// Type: concept
+// ModuleID: about-keys-in-debezium-mysql-change-events
+// Title: About keys in {prodname} MySQL change events
+[[mysql-change-event-keys]]
+=== Change event keys
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=event-keys]
+
+// Type: concept
+// ModuleID: about-values-in-debezium-mysql-change-events
+// Title: About values in {prodname} MySQL change events
+[[mysql-change-event-values]]
+=== Change event values
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=event-values]
+
+
+// Type: continue
+[id="mysql-create-events"]
+=== _create_ events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=create-events]
+
+// Type: continue
+[id="mysql-update-events"]
+=== _update_ events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=update-events]
+
+// Type: continue
+[id="mysql-primary-key-updates"]
+=== Primary key updates
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=pkey-updates]
+
+
+// Type: continue
+[id="mysql-delete-events"]
+=== _delete_ events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=del-events]
+
+// Type: continue
+[id="mysql-tombstone-events"]
+=== Tombstone events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=tombstone-events]
+
+// Type: continue
+[id="mysql-truncate-events"]
+=== _truncate_ events
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=truncate-events]
+
+// Type: reference
+// ModuleID: how-debezium-mysql-connectors-map-data-types
+// Title: How {prodname} MySQL connectors map data types
+[[mysql-data-types]]
+== Data type mappings
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=data-type-mappings]
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=data-type-mappings-list-mysql-only]
+
+[id="mysql-basic-types"]
+=== Basic types
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=basic-data-types]
+
+.
+[id="mysql-temporal-types"]
+=== Temporal types
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=temporal-data-types]
+
+[id="mysql-decimal-types"]
+=== Decimal types
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=decimal-data-types]
+
+[id="mysql-boolean-values"]
+=== Boolean values
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=boolean-values]
+
+[id="mysql-spatial-types"]
+=== Spatial types
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=spatial-data-types]
+
+[id="mysql-vector-types"]
+=== Vector types
+
+Currently, the {prodname} {connector-name} connector supports the following vector data types.
+
+.Description of vector type mappings
+[cols="35%a,15%a,50%a",options="header",subs="+attributes"]
+|===
+|{connector-name} type |Literal type |Semantic type
+
+|`VECTOR`
+|`ARRAY (FLOAT32)`
+|`io.debezium.data.FloatVector` +
+
+|===
+
+// Type: concept
+// Title: Custom converters for mapping {connector-name} data to alternative data types
+[id="debezium-mysql-connector-converters"]
+== Custom converters
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=custom-converters]
+
+=== `TINYINT(1)` to Boolean
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=tinyint-boolean-conv]
+
+=== JDBC sink data types
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=jdbc-sink-data-types]
+
+
+// Type: assembly
+// ModuleID: setting-up-mysql-to-run-a-debezium-connector
+// Title: Setting up MySQL to run a {prodname} connector
+[[setting-up-mysql]]
+== Setting up MySQL
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=setting-up-db]
+
+// Type: procedure
+// ModuleID: creating-a-mysql-user-for-a-debezium-connector
+// Title: Creating a MySQL user for a {prodname} connector
+[[mysql-creating-user]]
+=== Creating a user
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=creating-a-db-user]
+
+// Type: procedure
+// ModuleID: enabling-the-mysql-binlog-for-debezium
+// Title: Enabling the MySQL binlog for {prodname}
+[[enable-mysql-binlog]]
+=== Enabling the binlog
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=enabling-binlog]
+
+
+// Type: procedure
+// ModuleID: enabling-mysql-gtids-for-debezium
+// Title: Enabling MySQL Global Transaction Identifiers for {prodname}
+[[enable-mysql-gtids]]
+=== Enabling GTIDs
+
+Global transaction identifiers (GTIDs) uniquely identify transactions that occur on a server within a cluster. Though not required for a {prodname} MySQL connector, using GTIDs simplifies replication and enables you to more easily confirm if primary and replica servers are consistent.
+
+GTIDs are available in MySQL 5.6.5 and later. See the link:https://dev.mysql.com/doc/refman/{mysql-version}/en/replication-options-gtids.html#option_mysqld_gtid-mode[MySQL documentation] for more details.
+
+.Prerequisites
+
+* A MySQL server.
+* Basic knowledge of SQL commands.
+* Access to the MySQL configuration file.
+
+.Procedure
+
+. Enable `gtid_mode`:
++
+[source,SQL]
+----
+mysql> gtid_mode=ON
+----
+
+. Enable `enforce_gtid_consistency`:
++
+[source,SQL]
+----
+mysql> enforce_gtid_consistency=ON
+----
+
+. Confirm the changes:
++
+[source,SQL]
+----
+mysql> show global variables like '%GTID%';
+----
+
++
+.Result
+[source,SQL]
+----
++--------------------------+-------+
+| Variable_name            | Value |
++--------------------------+-------+
+| enforce_gtid_consistency | ON    |
+| gtid_mode                | ON    |
++--------------------------+-------+
+----
+
++
+.Descriptions of GTID options
+[cols="3,7",options="header",subs="+attributes"]
+|===
+|Option |Description
+
+|`gtid_mode`
+a|Boolean that specifies whether GTID mode of the MySQL server is enabled or not.
+
+* `ON` = enabled
+* `OFF` = disabled
+
+|`enforce_gtid_consistency`
+a|Boolean that specifies whether the server enforces GTID consistency by allowing the execution of statements that can be logged in a transactionally safe manner. Required when using GTIDs.
+
+* `ON` = enabled
+* `OFF` = disabled
+
+|===
+
+
+// Type: procedure
+// ModuleID: configuring-mysql-session-timeouts-for-debezium
+// Title: Configuring MySQL session timesouts for {prodname}
+[[mysql-session-timeouts]]
+=== Configuring session timeouts
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=cfg-session-timeouts]
+
+// Type: procedure
+// ModuleID: enabling-query-log-events-for-debezium-mysql-connectors
+// Title: Enabling query log events for {prodname} MySQL connectors
+[[enable-query-log-events]]
+=== Enabling query log events
+
+You might want to see the original `SQL` statement for each binlog event.
+Enabling the `binlog_rows_query_log_events` option in the MySQL configuration file allows you to do this.
+
+This option is available in MySQL 5.6 and later.
+
+.Prerequisites
+
+* A MySQL server.
+* Basic knowledge of SQL commands.
+* Access to the MySQL configuration file.
+
+.Procedure
+
+* Enable `binlog_rows_query_log_events` in MySQL:
++
+[source,SQL]
+----
+mysql> binlog_rows_query_log_events=ON
+----
++
+`binlog_rows_query_log_events` is set to a value that enables/disables support for including the original `SQL` statement in the binlog entry.
++
+** `ON` = enabled
+** `OFF` = disabled
+
+// Type: procedure
+// ModuleID: validate-binlog-row-value-options-for-debezium-mysql-connectors
+// Title: validate binlog row value options for {prodname} MySQL connectors
+[[validate-binlog-row-value-options]]
+=== Validating binlog row value options
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=validate-binlog-row-options]
+
+
+// Type: assembly
+// ModuleID: deployment-of-debezium-mysql-connectors
+// Title: Deployment of {prodname} MySQL connectors
+[[mysql-deploying-a-connector]]
+== Deployment
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=deployment]
+
+ifdef::product[]
+
+// Type: concept
+[id="openshift-streams-mysql-connector-deployment"]
+=== MySQL connector deployment using {StreamsName}
+
+include::{partialsdir}/modules/all-connectors/con-connector-streams-deployment.adoc[leveloffset=+1]
+
+// Type: procedure
+[id="using-streams-to-deploy-a-debezium-mysql-connector"]
+=== Using {StreamsName} to deploy a {prodname} MySQL connector
+
+include::{partialsdir}/modules/all-connectors/proc-using-streams-to-deploy-a-debezium-mysql-sqlserver-connector.adoc[leveloffset=+1]
+
+// Type: procedure
+// ModuleID: deploying-debezium-mysql-connectors
+=== Deploying {prodname} MySQL connectors by building a custom Kafka Connect container image from a Dockerfile
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=deploy-via-dockerfile]
+endif::product[]
+
+ifdef::community[]
+[[mysql-example-configuration]]
+=== MySQL connector configuration example
+endif::community[]
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=connector-config-example]
+
+ifdef::community[]
+[[mysql-adding-configuration]]
+=== Adding connector configuration
+endif::community[]
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=add-connector-cfg]
+
+ifdef::product[]
+// Type: procedure
+[id="verifying-that-the-debezium-mysql-connector-is-running"]
+=== Verifying that the {prodname} MySQL connector is running
+
+include::{partialsdir}/modules/all-connectors/proc-verifying-the-connector-deployment.adoc[leveloffset=+1]
+endif::product[]
+
+// Type: reference
+// Title: Descriptions of {prodname} MySQL connector configuration properties
+[[mysql-connector-properties]]
+=== Connector properties
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=connector-props-intro]
+
+[id="mysql-required-connector-configuration-properties"]
+==== Required {prodname} MySQL connector configuration properties
+
+include::{partialsdir}/modules/all-connectors/ref-mariadb-mysql-rqd-connector-cfg-props.adoc[leveloffset=+1]
+
+[id="mysql-advanced-connector-configuration-properties"]
+==== Advanced {prodname} MySQL connector configuration properties
+
+include::{partialsdir}/modules/all-connectors/ref-mariadb-mysql-adv-connector-cfg-props.adoc[leveloffset=+1]
+
+[id="debezium-mysql-connector-database-history-configuration-properties"]
+==== {prodname} connector database schema history configuration properties
+
+include::{partialsdir}/modules/all-connectors/ref-connector-configuration-database-history-properties.adoc[leveloffset=+1]
+
+[id="debezium-mysql-connector-pass-through-properties"]
+==== Pass-through MySQL connector configuration properties
+
+You can set  _pass-through_ properties in the connector configuration to customize the behavior of the Apache Kafka producer and consumer.
+For information about the full range of configuration properties for Kafka producers and consumers, see the {link-kafka-docs}/#configuration[Kafka documentation].
+
+[id="debezium-mysql-pass-through-database-history-properties-for-configuring-producer-and-consumer-clients"]
+===== Pass-through properties for configuring how producer and consumer clients interact with schema history topics
+
+include::{partialsdir}/modules/all-connectors/ref-connector-pass-through-database-history-properties-for-configuring-producer-and-consumer-clients.adoc[leveloffset=+1]
+
+
+[id="debezium-mysql-connector-pass-through-kafka-signals-configuration-properties"]
+===== Pass-through properties for configuring how the MySQL connector interacts with the Kafka signaling topic
+
+include::{partialsdir}/modules/all-connectors/ref-connector-pass-through-kafka-signals-configuration-properties.adoc[leveloffset=+1]
+
+
+[id="debezium-mysql-connector-pass-through-signals-kafka-consumer-client-configuration-properties"]
+===== Pass-through properties for configuring the Kafka consumer client for the signaling channel
+
+include::{partialsdir}/modules/all-connectors/ref-connector-pass-through-signals-kafka-consumer-client-configuration-properties.adoc[leveloffset=+1]
+
+
+[id="debezium-mysql-connector-pass-through-kafka-sink-notification-configuration-properties"]
+===== Pass-through properties for configuring the MySQL connector sink notification channel
+
+include::{partialsdir}/modules/all-connectors/ref-connector-pass-through-kafka-sink-notification-configuration-properties.adoc[leveloffset=+1]
+
+
+[id="debezium-mysql-connector-pass-through-database-driver-configuration-properties"]
+===== {prodname} connector pass-through database driver configuration properties
+
+include::{partialsdir}/modules/all-connectors/ref-connector-pass-through-database-driver-configuration-properties.adoc[leveloffset=+1]
+
+
+
+
+// Type: assembly
+// ModuleID: monitoring-debezium-mysql-connector-performance
+// Title: Monitoring {prodname} MySQL connector performance
+[[mysql-monitoring]]
+== Monitoring
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=monitoring-intro]
+
+// Type: concept
+// ModuleID: monitoring-debezium-mysql-connectors-customized-mbean-names
+// Title: Customized names for MySQL connector snapshot and streaming MBean objects
+=== Customized MBean names
+
+include::{partialsdir}/modules/all-connectors/frag-common-mbean-name.adoc[leveloffset=+1,tags=mbeans-shared]
+
+// Type: reference
+// Title: Monitoring {prodname} during snapshots of MySQL databases
+[[mysql-snapshot-metrics]]
+=== Snapshot metrics
+
+include::{partialsdir}/modules/all-connectors/frag-common-mbean-name.adoc[leveloffset=+1,tags=common-snapshot]
+
+include::{partialsdir}/modules/all-connectors/ref-connector-monitoring-snapshot-metrics.adoc[leveloffset=+1]
+
+include::{partialsdir}/modules/all-connectors/ref-connector-monitoring-incremental-snapshot-metrics.adoc[leveloffset=+1]
+
+// Type: reference
+// Title: Monitoring {prodname} MySQL connector record streaming
+[[mysql-streaming-metrics]]
+=== Streaming metrics
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=monitoring-intro]
+
+include::{partialsdir}/modules/all-connectors/frag-common-mbean-name.adoc[leveloffset=+1,tags=common-streaming]
+
+include::{partialsdir}/modules/all-connectors/ref-connector-monitoring-streaming-metrics.adoc[leveloffset=+1]
+
+// Type: reference
+// Title: Monitoring {prodname} MySQL connector schema history
+[[mysql-schema-history-metrics]]
+=== Schema history metrics
+
+include::{partialsdir}/modules/all-connectors/ref-connector-monitoring-schema-history-metrics.adoc[leveloffset=+1]
+
+// Type: concept
+// Title: How {prodname} MySQL connectors handle faults and problems
+[[mysql-when-things-go-wrong]]
+== Behavior when things go wrong
+
+include::{partialsdir}/modules/all-connectors/shared-mariadb-mysql.adoc[leveloffset=+1,tags=wrong-things]

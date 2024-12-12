@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>io.debezium</groupId>
+    <artifactId>debezium-parent</artifactId>
+    <version>3.0.3-SNAPSHOT</version>
+    <relativePath>../debezium-parent/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>debezium-testing</artifactId>
+  <name>Debezium Testing</name>
+  <packaging>pom</packaging>
+
+  <properties>
+    <maven.compiler.source>${debezium.java.source}</maven.compiler.source>
+    <maven.compiler.target>${debezium.java.specific.target}</maven.compiler.target>
+    <maven.compiler.release>${debezium.java.specific.target}</maven.compiler.release>
+    <maven.compiler.testRelease>${debezium.java.specific.target}</maven.compiler.testRelease>
+  </properties>
+  <modules>
+    <module>debezium-testing-testcontainers</module>
+    <module>debezium-testing-system</module>
+  </modules>
+</project>
